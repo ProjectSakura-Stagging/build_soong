@@ -182,9 +182,9 @@ func dumpMakeVars(ctx Context, config Config, goals, vars []string, tmpDir strin
 var BannerVars = []string{
 	"PLATFORM_VERSION_CODENAME",
 	"PLATFORM_VERSION",
-	"LINEAGE_VERSION",
+	"SAKURA_VERSION",
 	"PRODUCT_SOURCE_ROOT_DIRS",
-	"TARGET_PRODUCT",
+	"TARGET_DEVICE",
 	"TARGET_BUILD_VARIANT",
 	"TARGET_BUILD_APPS",
 	"TARGET_BUILD_UNBUNDLED",
@@ -212,45 +212,39 @@ var BannerVars = []string{
 func Banner(config Config, make_vars map[string]string) string {
 	b := &bytes.Buffer{}
 
-	fmt.Fprintln(b, "============================================")
-	for _, name := range BannerVars {
-		if make_vars[name] != "" {
-			fmt.Fprintf(b, "%s=%s\n", name, make_vars[name])
-		}
-	}
-
-	if use, _ := config.environ.Get("SOONG_USE_PARTIAL_COMPILE"); use == "true" {
-		if partialCompile, ok := config.environ.Get("SOONG_PARTIAL_COMPILE"); ok {
-			fmt.Fprintf(b, "SOONG_PARTIAL_COMPILE=%s\n", partialCompile)
-		}
-	}
-
-	// Only show USE_RBE and USE_REWRAPPER when the user has explicitly set SOONG_NINJA
-	if config.ninjaCommand != NINJA_DEFAULT {
-		fmt.Fprintf(b, "SOONG_NINJA=%s\n", config.ninjaCommand.String())
-	}
-	if config.UseRBE() {
-		fmt.Fprintf(b, "USE_RBE=%t\n", config.UseRBE())
-		if config.ninjaCommand == NINJA_SISO {
-			fmt.Fprintf(b, "USE_REWRAPPER=%t\n", config.UseRewrapper())
-		}
-	}
-
-	// Normally config.soongOnlyRequested already takes into account PRODUCT_SOONG_ONLY,
-	// except when doing `get_build_var report_config`, which is run during envsetup.
-	if config.skipKatiControlledByFlags {
-		fmt.Fprintf(b, "SOONG_ONLY=%t\n", config.soongOnlyRequested)
-	} else { // default for this product
-		fmt.Fprintf(b, "SOONG_ONLY=%t\n", make_vars["PRODUCT_SOONG_ONLY"] == "true")
-	}
-
-	fmt.Fprintf(b, "SOONG_INCREMENTAL_ANALYSIS=%t\n", config.incrementalBuildActions)
-
-	if len(config.partialAnalysisTargets) > 0 {
-		fmt.Fprintf(b, "SOONG_PARTIAL_ANALYSIS=%s\n", config.partialAnalysisTargets)
-	}
-
-	fmt.Fprint(b, "============================================")
+	fmt.Fprintln(b, "==========================================================================")
+	fmt.Fprintln(b, "* ╔═╗ ╦═╗ ╔═╗   ╦ ╔═╗ ╔═╗ ╔╦╗")
+	fmt.Fprintln(b, "* ╠═╝ ╠╦╝ ║ ║   ║ ║╣  ║    ║ ")
+	fmt.Fprintln(b, "* ╩   ╩╚═ ╚═╝ ╚═╝ ╚═╝ ╚═╝  ╩ ")
+	fmt.Fprintln(b, "*   ╔═╗ ╔═╗ ╦╔═ ╦ ╦ ╦═╗ ╔═╗")
+	fmt.Fprintln(b, "*   ╚═╗ ╠═╣ ╠╩╗ ║ ║ ╠╦╝ ╠═╣")
+	fmt.Fprintln(b, "*   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝ ╩╚═ ╩ ╩")
+	fmt.Fprintln(b, "* by ArmSM")
+	fmt.Fprintln(b, "* WELCOME TO PROJECT SAKURA ✿ ❀ ✿")
+	fmt.Fprintln(b, "==========================================================================")
+        fmt.Fprintf(b, "%s=%s\n", "SAKURA_VERSION", make_vars["SAKURA_VERSION"])
+        fmt.Fprintf(b, "%s=%s\n", "PLATFORM_VERSION_CODENAME", make_vars["PLATFORM_VERSION_CODENAME"])
+        fmt.Fprintf(b, "%s=%s\n", "PLATFORM_VERSION", make_vars["PLATFORM_VERSION"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_PRODUCT", make_vars["TARGET_PRODUCT"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_BUILD_VARIANT", make_vars["TARGET_BUILD_VARIANT"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_BUILD_TYPE", make_vars["TARGET_BUILD_TYPE"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_ARCH", make_vars["TARGET_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_ARCH_VARIANT", make_vars["TARGET_ARCH_VARIANT"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_CPU_VARIANT", make_vars["TARGET_CPU_VARIANT"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_2ND_ARCH", make_vars["TARGET_2ND_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_2ND_ARCH_VARIANT", make_vars["TARGET_2ND_ARCH_VARIANT"])
+        fmt.Fprintf(b, "%s=%s\n", "TARGET_2ND_CPU_VARIANT", make_vars["TARGET_2ND_CPU_VARIANT"])
+        fmt.Fprintf(b, "%s=%s\n", "BUILD_ID", make_vars["BUILD_ID"])
+        fmt.Fprintf(b, "%s=%s\n", "OUT_DIR", make_vars["OUT_DIR"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_ARCH", make_vars["HOST_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_2ND_ARCH", make_vars["HOST_2ND_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_OS", make_vars["HOST_OS"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_OS_EXTRA", make_vars["HOST_OS_EXTRA"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_CROSS_OS", make_vars["HOST_CROSS_OS"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_CROSS_ARCH", make_vars["HOST_CROSS_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "HOST_CROSS_2ND_ARCH", make_vars["HOST_CROSS_2ND_ARCH"])
+        fmt.Fprintf(b, "%s=%s\n", "PRODUCT_SOONG_NAMESPACES", make_vars["PRODUCT_SOONG_NAMESPACES"])
+        fmt.Fprintln(b, "=========================================================================")
 
 	return b.String()
 }
